@@ -11,13 +11,19 @@ const typeDefs = gql`
     user: User
   }
 
+  type SingedURL {
+    signedUrl: String
+  }
+
   type Query {
     user: User
+    getFileUploadURL: SingedURL
   }
 
   type Mutation {
     addUser(email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
+    fileUploadURL: SingedURL
   }
 `;
 
