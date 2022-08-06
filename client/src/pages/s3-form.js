@@ -1,16 +1,12 @@
 import React, { useState, useRef } from 'react';
 import './s3-form.css';
-import { useQuery, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { FILE_UPLOAD_URL } from '../utils/mutations';
-import { QUERY_UPLOADURL } from '../utils/queries';
 export default function S3Form({s3ImgURL, setS3ImgURL}) {
     const inputRef = useRef();
     const [ uploadedImg, setUploadedImg ] = useState([]);
     const [ deletedImgKey, setDeletedImgKey] = useState();
     const [ fileUploadURL, { error }  ] = useMutation(FILE_UPLOAD_URL);
-    // Get S3-UploadUrl
-    // const { loading, data } = useQuery(QUERY_UPLOADURL);
-    // console.log(!loading && data.getFileUploadURL.signedUrl);
     
     // Run input element
     const handleClick = () => {
@@ -29,6 +25,7 @@ export default function S3Form({s3ImgURL, setS3ImgURL}) {
           for(let i = 0; i < event.target.files.length; i++){
             fileUploaded.push(URL.createObjectURL(event.target.files[i])) // In files[i], there is image's URL of local location            
             try {
+                // Get S3-UploadUrl
                 const { data } = await fileUploadURL();
 
                 // Upload Img to AWS S3
@@ -46,8 +43,6 @@ export default function S3Form({s3ImgURL, setS3ImgURL}) {
                 console.error(err);
               }
           }
-          console.log(s3ImgURL)
-          console.log(imageUrl)
           setS3ImgURL([...s3ImgURL, ...imageUrl]);
           setUploadedImg([...uploadedImg, ...fileUploaded]);
         };
@@ -55,7 +50,7 @@ export default function S3Form({s3ImgURL, setS3ImgURL}) {
 
     const onClickDeleteS3Img = async (event) => {
         const index = event.target.dataset.imageIndex;
-        const getS3Key = event.target.dataset.s3key.split("amazonaws.com/")[1];
+        // const getS3Key = event.target.dataset.s3key.split("amazonaws.com/")[1];
 
         let tempImgArray = [...uploadedImg];
         tempImgArray.splice(index, 1);
@@ -64,11 +59,11 @@ export default function S3Form({s3ImgURL, setS3ImgURL}) {
         temp.splice(index, 1);
         setS3ImgURL(temp);
 
-        if(deletedImgKey){
-            setDeletedImgKey([...deletedImgKey, {'key': getS3Key}])
-        }else{
-            setDeletedImgKey([{'key': getS3Key}]);
-        }
+        // if(deletedImgKey){
+        //     setDeletedImgKey([...deletedImgKey, {'key': getS3Key}])
+        // }else{
+        //     setDeletedImgKey([{'key': getS3Key}]);
+        // }
         // const response = await deleteS3Img({'key': getS3Key});
         // console.log(response);
     }
