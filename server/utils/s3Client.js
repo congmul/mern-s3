@@ -12,8 +12,6 @@ Inputs (replace in code):
 require('dotenv').config()
 
 const { S3Client } =  require("@aws-sdk/client-s3");
-// Set the AWS Region.
-const REGION = "us-west-2"; //e.g. "us-east-1"
 // Create an Amazon S3 service client object.
 const s3Client = new S3Client({ 
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
@@ -21,4 +19,3 @@ const s3Client = new S3Client({
     region: process.env.REGION 
  });
 module.exports = { s3Client };
-// snippet-end:[s3.JavaScript.buckets.createclientv3]

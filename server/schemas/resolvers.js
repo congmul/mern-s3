@@ -16,8 +16,10 @@ const resolvers = {
       }
 
       throw new AuthenticationError('Not logged in');
-    },
-    getFileUploadURL: async (parent, args) => {
+    }
+  },
+  Mutation: {
+    fileUploadURL: async (parent, args) => {
       try{
         const bucketParams = {
           Bucket: '360shopping',
@@ -31,24 +33,7 @@ const resolvers = {
       }catch(err){
         console.log(err);
       }
-    }
-  },
-  Mutation: {
-    fileUploadURL: async (parent, args) => {
-    try{
-      const bucketParams = {
-        Bucket: '360shopping',
-        Key: `product-img/${uuidv4()}-${Date.now().toString()}`
-      };
-      const command = new PutObjectCommand(bucketParams);
-      const signedUrl = await getSignedUrl(s3Client, command, {
-          expiresIn: 3600,
-        });
-        return { signedUrl }
-    }catch(err){
-      console.log(err);
-    }
-  },
+    },
     addUser: async (parent, args) => {
       const user = await User.create(args);
       const token = signToken(user);
